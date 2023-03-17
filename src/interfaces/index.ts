@@ -3,3 +3,7 @@ export interface ITodo {
     description: string
     date: Date
 }
+
+export interface ICallback {
+    callback: { payload: { id: number; }; type: "todos/deleteTodo"; }
+}

@@ -1,0 +1,23 @@
+$color: rgba(0, 0, 0, 0.88);
+
+.ant-list-item {
+  min-height: 77px;
+}
+
+.anticon {
+  transition: color .3s;
+
+  &:hover {
+    color: $color
+  }
+}
+
+.anticon-check {
+  &.active {
+    color: $color;
+
+    &:hover {
+      color: rgba(0, 0, 0, 0.48);
+    }
+  }
+}

@@ -1,22 +1,24 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {ICallback} from "../../interfaces";
 
 interface IInitialState {
     isOpen: boolean
-    action: any
+    callback: { payload: { id: number; }; type: "todos/deleteTodo"; } | (() => void)
 }
 
 const initialState: IInitialState = {
     isOpen: false,
-    action() {}
+    callback() {
+    }
 }
 
 const ModalsSlice = createSlice({
     name: 'modals',
     initialState,
     reducers: {
-        setModal: (state, action: PayloadAction<IInitialState>) => {
+        setModal: (state, action: PayloadAction<ICallback>) => {
             state.isOpen = true
-            state.action = action.payload.action
+            state.callback = action.payload.callback
         },
         closeModal: (state) => {
             state.isOpen = false

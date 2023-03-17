@@ -6,23 +6,23 @@ import CreateTodoInput from "./components/CreateTodoInput";
 
 import type {RootState} from './redux/store'
 import ConfirmModal from "./components/ConfirmModal";
-import {useAppDispatch, useAppSelector} from "./hooks";
+import {useAppSelector} from "./hooks";
 
 const {Content} = Layout;
 
 const contentStyle: React.CSSProperties = {
-    width: '45%',
+    width: '35%',
     margin: '0 auto',
 };
+
+const title: string = 'TODO-list'
 
 export default function App() {
     const todos = useAppSelector((state: RootState) => state.todos.list)
 
-    const dispatch = useAppDispatch()
-
     return (
         <Content style={contentStyle}>
-            <h2 className={'title'}>To-Do List</h2>
+            <h2 className={'title'}>{title}</h2>
             <CreateTodoInput/>
             <List
                 itemLayout="horizontal"

@@ -13,7 +13,7 @@ export default function ConfirmModal() {
 
     const modalAction = () => {
         modalClose()
-        dispatch(modalData.action)
+        dispatch(modalData.callback)
     }
 
     return (

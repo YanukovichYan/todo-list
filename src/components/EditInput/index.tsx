@@ -1,33 +1,15 @@
-import React from 'react';
+import React, {ChangeEvent} from 'react';
 import {Input} from "antd";
-import {CheckOutlined} from "@ant-design/icons";
 import './EditInput.scss'
-import {editTodo} from "../../redux/slices/todos";
-import {ITodo} from "../../interfaces";
-import {useAppDispatch} from "../../hooks";
 
-interface IInputProps {
+interface IEditInputProps {
     value: string
-    onChange: (e: any) => void
+    onChange: (e: ChangeEvent<HTMLInputElement>) => void
     edit: boolean
-    setEdit: (val: boolean) => void
-    todo: ITodo
+    editTodoHandler: () => void
 }
 
-export default function EditInput({value, onChange, edit, setEdit, todo}: IInputProps) {
-    const dispatch = useAppDispatch()
-
-    const editTodoHandler = () => {
-        const currentDate: Date = new Date()
-        const editedTodo = {...todo}
-
-        editedTodo.description = value
-        editedTodo.date = currentDate
-
-        dispatch(editTodo(editedTodo))
-        setEdit(false)
-    }
-
+export default function EditInput({value, onChange, edit, editTodoHandler}: IEditInputProps) {
     return (
         <>
             {edit
@@ -36,8 +18,8 @@ export default function EditInput({value, onChange, edit, setEdit, todo}: IInput
                         value={value}
                         onChange={(e) => onChange(e)}
                         onKeyDown={(e) => e.keyCode === 13 && editTodoHandler()}
+                        autoFocus
                     />
-                    <CheckOutlined className={'check-icon'} onClick={() => editTodoHandler()}/>
                 </div>
                 : <span>{value}</span>}
         </>

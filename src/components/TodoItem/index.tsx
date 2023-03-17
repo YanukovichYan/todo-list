@@ -1,17 +1,14 @@
-import React, {useEffect, useState} from 'react';
+import React, {ChangeEvent, ReactElement, useEffect, useState} from 'react';
 import {List} from "antd";
-import {DeleteOutlined, EditOutlined} from '@ant-design/icons'
+import {CheckOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons'
 import EditInput from "../EditInput";
-import {deleteTodo} from "../../redux/slices/todos";
+import {deleteTodo, editTodo} from "../../redux/slices/todos";
 import {ITodo} from "../../interfaces";
 import {useAppDispatch} from "../../hooks";
 import {setModal} from "../../redux/slices/modals";
+import './TodoItem.scss'
 
-interface ITodoItemProps {
-    todo: ITodo
-}
-
-export default function TodoItem({todo}: ITodoItemProps) {
+export default function TodoItem({todo}: { todo: ITodo }) {
     const [inputValue, setInputValue] = useState<string>('')
     const [edit, setEdit] = useState<boolean>(false)
 
@@ -21,40 +18,40 @@ export default function TodoItem({todo}: ITodoItemProps) {
         setInputValue(todo.description)
     }, [todo])
 
-    const todoItemChangeHandler = (e: any) => {
+    const todoInputEditHandler = (e: ChangeEvent<HTMLInputElement>): void => {
         setInputValue(e.target.value)
     }
 
-    const editTodoClickHandler = () => {
-        setEdit(prev => !prev)
-    }
+    const editIconClick = (): void => setEdit(true)
 
-    const deleteTodoClickHandler = () => {
-        dispatch(setModal({isOpen: true, action: deleteTodo(todo)}))
+    const deleteTodoClickHandler = (): void => {
+        dispatch(setModal({callback: deleteTodo({id: todo.id})}))
     }
 
     const dateWithFormat: string = todo.date.toLocaleString('en-GB')
 
+    const editTodoHandler = (): void => {
+        dispatch(editTodo({id: todo.id, description: inputValue}))
+        setEdit(false)
+    }
+
+    const todoItemAction: ReactElement = edit ?
+        <CheckOutlined className={`${edit && 'active'}`} onClick={editTodoHandler}/> :
+        <EditOutlined onClick={editIconClick}/>
+
     return (
         <List.Item
-            actions={[<EditIcon onClick={editTodoClickHandler}/>, <DeleteOutlined onClick={deleteTodoClickHandler}/>]}
+            actions={[todoItemAction, <DeleteOutlined onClick={deleteTodoClickHandler}/>]}
         >
             <List.Item.Meta
                 title={<EditInput
-                    value={!edit ? todo.description : inputValue}
-                    onChange={todoItemChangeHandler}
+                    value={inputValue}
+                    onChange={todoInputEditHandler}
                     edit={edit}
-                    setEdit={setEdit}
-                    todo={todo}
+                    editTodoHandler={editTodoHandler}
                 />}
-                description={dateWithFormat}
+                description={!edit && dateWithFormat}
             />
         </List.Item>
     );
 };
-
-const EditIcon = ({onClick}: any) => {
-    return (
-        <EditOutlined className='editIcons' onClick={() => onClick()}/>
-    )
-}

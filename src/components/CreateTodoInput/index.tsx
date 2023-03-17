@@ -1,33 +1,21 @@
-import React, {useState} from 'react';
+import React, {ChangeEvent, useState} from 'react';
 import {Button, Input, Space} from "antd";
-import {useSelector} from "react-redux";
 import {addTodo} from "../../redux/slices/todos";
-import {RootState} from "../../redux/store";
-import {ITodo} from "../../interfaces";
 import {useAppDispatch} from "../../hooks";
 
 export default function CreateTodoInput() {
     const [newTodoValue, setNewTodoValue] = useState<string>('')
 
-    const todos = useSelector((state: RootState) => state.todos.list)
     const dispatch = useAppDispatch()
 
-    const addTodoHandler = () => {
+    const addTodoHandler = (): void => {
         if (!newTodoValue) return
 
-        const currentDate: Date = new Date()
-        const createTodoId: number = todos.length + 1
-
-        const newTodo: ITodo = {
-            id: createTodoId,
-            description: newTodoValue,
-            date: currentDate
-        }
-        dispatch(addTodo(newTodo))
+        dispatch(addTodo(newTodoValue))
         setNewTodoValue('')
     }
 
-    const changeInputHandler = (e: any) => {
+    const changeInputHandler = (e: ChangeEvent<HTMLInputElement>): void => {
         setNewTodoValue(e.target.value)
     }
 
