@@ -15,10 +15,8 @@ export const todosSlice = createSlice({
     initialState,
     reducers: {
         addTodo: (state, action: PayloadAction<string>) => {
-            const createTodoId: number = state.list.length + 1
-
             const newTodo: ITodo = {
-                id: createTodoId,
+                id: Date.now(),
                 description: action.payload,
                 date: new Date()
             }
