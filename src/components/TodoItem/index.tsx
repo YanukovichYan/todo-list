@@ -1,49 +1,53 @@
-import React, {useState} from 'react';
-import { List} from "antd";
-import {CheckOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons'
+import React, {useEffect, useState} from 'react';
+import {List} from "antd";
+import {DeleteOutlined, EditOutlined} from '@ant-design/icons'
 import EditInput from "../EditInput";
+import {deleteTodo} from "../../redux/slices/todos";
+import {ITodo} from "../../interfaces";
+import {useAppDispatch} from "../../hooks";
+import {setModal} from "../../redux/slices/modals";
 
 interface ITodoItemProps {
-    todo: any
+    todo: ITodo
 }
 
-export default function TodoItem({todo} : ITodoItemProps) {
-    const [inputValue, setInputValue] = useState('')
+export default function TodoItem({todo}: ITodoItemProps) {
+    const [inputValue, setInputValue] = useState<string>('')
     const [edit, setEdit] = useState<boolean>(false)
 
+    const dispatch = useAppDispatch()
+
+    useEffect(() => {
+        setInputValue(todo.description)
+    }, [todo])
+
     const todoItemChangeHandler = (e: any) => {
-        console.log(e.target.value)
         setInputValue(e.target.value)
     }
+
     const editTodoClickHandler = () => {
         setEdit(prev => !prev)
     }
 
     const deleteTodoClickHandler = () => {
-        console.log('Delete')
+        dispatch(setModal({isOpen: true, action: deleteTodo(todo)}))
     }
 
-    const currentDate: string = new Date().toLocaleDateString('en-GB')
-
-    // const setTodoClickHandler = () => {
-    //     console.log('SET')
-    //     // setEdit(false)
-    // }
-
-    // const todoItemAction = edit ? <CheckIcon onClick={setTodoClickHandler} /> : <EditIcon onClick={editTodoClickHandler} />
+    const dateWithFormat: string = todo.date.toLocaleString('en-GB')
 
     return (
         <List.Item
-            actions={[<EditIcon onClick={editTodoClickHandler} />, <DeleteOutlined onClick={deleteTodoClickHandler} />]}
+            actions={[<EditIcon onClick={editTodoClickHandler}/>, <DeleteOutlined onClick={deleteTodoClickHandler}/>]}
         >
             <List.Item.Meta
                 title={<EditInput
-                    value={inputValue}
+                    value={!edit ? todo.description : inputValue}
                     onChange={todoItemChangeHandler}
                     edit={edit}
                     setEdit={setEdit}
+                    todo={todo}
                 />}
-                description={currentDate}
+                description={dateWithFormat}
             />
         </List.Item>
     );
@@ -51,12 +55,6 @@ export default function TodoItem({todo} : ITodoItemProps) {
 
 const EditIcon = ({onClick}: any) => {
     return (
-        <EditOutlined className='editIcons' onClick={() => onClick()} />
-    )
-}
-
-const CheckIcon = ({onClick}: any) => {
-    return (
-        <CheckOutlined onClick={onClick()} />
+        <EditOutlined className='editIcons' onClick={() => onClick()}/>
     )
 }

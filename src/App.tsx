@@ -1,22 +1,35 @@
 import React from 'react';
 import './App.scss';
-import {List, Spin} from "antd";
+import {List, Layout} from "antd";
 import TodoItem from "./components/TodoItem";
 import CreateTodoInput from "./components/CreateTodoInput";
 
+import type {RootState} from './redux/store'
+import ConfirmModal from "./components/ConfirmModal";
+import {useAppDispatch, useAppSelector} from "./hooks";
+
+const {Content} = Layout;
+
+const contentStyle: React.CSSProperties = {
+    width: '45%',
+    margin: '0 auto',
+};
+
 export default function App() {
-    const data: any = [{title: 'asdas'}];
+    const todos = useAppSelector((state: RootState) => state.todos.list)
+
+    const dispatch = useAppDispatch()
 
     return (
-        <div className={'app-wrapper'}>
-            <h2 className={'title'}>ToDo List</h2>
+        <Content style={contentStyle}>
+            <h2 className={'title'}>To-Do List</h2>
             <CreateTodoInput/>
             <List
                 itemLayout="horizontal"
-                dataSource={data}
-                renderItem={(item) => <TodoItem todo={item}/>}
+                dataSource={todos}
+                renderItem={(todo) => <TodoItem todo={todo}/>}
             />
-            {/*<Spin/>*/}
-        </div>
+            <ConfirmModal/>
+        </Content>
     );
 }
