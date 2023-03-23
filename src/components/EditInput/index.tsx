@@ -1,5 +1,5 @@
-import React, {ChangeEvent} from 'react';
-import {Input} from "antd";
+import React, {ChangeEvent, ForwardedRef} from 'react';
+import {Input, InputRef} from "antd";
 import './EditInput.scss'
 
 interface IEditInputProps {
@@ -9,7 +9,12 @@ interface IEditInputProps {
     editTodoHandler: () => void
 }
 
-export default function EditInput({value, onChange, edit, editTodoHandler}: IEditInputProps) {
+export const EditInput = React.forwardRef(({
+                                               value,
+                                               onChange,
+                                               edit,
+                                               editTodoHandler
+                                           }: IEditInputProps, ref: ForwardedRef<InputRef>) => {
     return (
         <>
             {edit
@@ -18,12 +23,12 @@ export default function EditInput({value, onChange, edit, editTodoHandler}: IEdi
                         value={value}
                         onChange={(e) => onChange(e)}
                         onKeyDown={(e) => e.keyCode === 13 && editTodoHandler()}
-                        autoFocus
+                        ref={ref}
                     />
                 </div>
                 : <span>{value}</span>}
         </>
     );
-};
+})
 
 

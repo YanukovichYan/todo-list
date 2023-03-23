@@ -1,7 +1,7 @@
-import React, {ChangeEvent, ReactElement, useEffect, useState} from 'react';
+import React, {ChangeEvent, ReactElement, useEffect, useRef, useState} from 'react';
 import {List} from "antd";
 import {CheckOutlined, DeleteOutlined, EditOutlined} from '@ant-design/icons'
-import EditInput from "../EditInput";
+import {EditInput} from "../EditInput";
 import {deleteTodo, editTodo} from "../../redux/slices/todos";
 import {ITodo} from "../../interfaces";
 import {useAppDispatch} from "../../hooks";
@@ -39,6 +39,14 @@ export default function TodoItem({todo}: { todo: ITodo }) {
         <CheckOutlined className={`${edit && 'active'}`} onClick={editTodoHandler}/> :
         <EditOutlined onClick={editIconClick}/>
 
+    const inputRef = useRef<any>(null)
+
+    useEffect(() => {
+        if (inputRef.current) {
+            inputRef.current.focus()
+        }
+    }, [edit])
+
     return (
         <List.Item
             actions={[todoItemAction, <DeleteOutlined onClick={deleteTodoClickHandler}/>]}
@@ -49,6 +57,7 @@ export default function TodoItem({todo}: { todo: ITodo }) {
                     onChange={todoInputEditHandler}
                     edit={edit}
                     editTodoHandler={editTodoHandler}
+                    ref={inputRef}
                 />}
                 description={!edit && dateWithFormat}
             />
